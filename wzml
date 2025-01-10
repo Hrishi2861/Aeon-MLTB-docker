@@ -85,21 +85,22 @@ install_rclone() {
 # Install Python packages
 install_python_packages() {
     pip3 install --break-system-packages --no-cache-dir -U setuptools uv
+    pip3 install tgcrypto --break-system-packages
 }
 
 # Clone and build MEGA SDK
-build_mega_sdk() {
-    git clone https://github.com/meganz/sdk.git --depth=1 -b v4.8.0 /home/sdk
-    cd /home/sdk
-    rm -rf .git
-    autoupdate -fIv && ./autogen.sh
-    ./configure --disable-silent-rules --enable-python --with-sodium --disable-examples
-    make -j$(nproc --all)
+#build_mega_sdk() {
+    #git clone https://github.com/meganz/sdk.git --depth=1 -b v4.8.0 /home/sdk
+    #cd /home/sdk
+    #rm -rf .git
+    #autoupdate -fIv && ./autogen.sh
+    #./configure --disable-silent-rules --enable-python --with-sodium --disable-examples
+    #make -j$(nproc --all)
 
-    cd bindings/python/
-    python3.12 setup.py bdist_wheel
-    pip3 install --break-system-packages --no-cache-dir dist/megasdk-4.8.0-*.whl
-}
+    #cd bindings/python/
+    #python3.12 setup.py bdist_wheel
+    #pip3 install --break-system-packages --no-cache-dir dist/megasdk-4.8.0-*.whl
+#}
 
 # Clean up unnecessary packages and temporary files
 cleanup() {
@@ -111,7 +112,7 @@ cleanup() {
     apt-get autoremove -y
     apt-get autoclean -y
 
-    rm -rf /Temp Aeon Dockerfile
+    rm -rf /Temp Aeon wzml Dockerfile
 }
 
 # Main script execution
