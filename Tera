@@ -1,0 +1,60 @@
+#!/bin/bash
+
+# Update and upgrade system packages
+update_system() {
+    apt-get update && apt-get upgrade -y
+}
+
+# Install Python 3.12 and essential dependencies
+install_python() {
+    apt-get install -y software-properties-common
+    add-apt-repository -y ppa:deadsnakes/ppa
+    apt-get update
+    apt-get install -y python3.12 python3.12-dev python3.12-venv python3-pip libpython3.12 libpython3.12-dev
+}
+
+# Install additional system dependencies
+install_dependencies() {
+    apt-get install -y --no-install-recommends \
+        apt-utils aria2 curl zstd git libmagic-dev \
+        locales mediainfo neofetch p7zip-full \
+        p7zip-rar tzdata wget autoconf automake \
+        build-essential cmake g++ gcc gettext \
+        gpg-agent intltool libtool make unzip zip \
+        libcurl4-openssl-dev libsodium-dev libssl-dev \
+        libcrypto++-dev libc-ares-dev libsqlite3-dev \
+        libfreeimage-dev swig libboost-all-dev \
+        libpthread-stubs0-dev zlib1g-dev
+}
+
+# Install Python packages
+install_python_packages() {
+    pip3 install --break-system-packages --no-cache-dir -U setuptools uv tgcrypto
+    mv /usr/bin/aria2c /usr/bin/xria
+}
+
+
+
+# Clean up unnecessary packages and temporary files
+cleanup() {
+    apt-get remove -y \
+        autoconf automake build-essential cmake g++ gcc gettext \
+        gpg-agent intltool libtool make unzip zip libcurl4-openssl-dev \
+        libssl-dev libc-ares-dev libsqlite3-dev swig libboost-all-dev \
+        libpthread-stubs0-dev zlib1g-dev
+    apt-get autoremove -y
+    apt-get autoclean -y
+
+    rm -rf /Temp Tera Dockerfile
+}
+
+# Main script execution
+main() {
+    update_system
+    install_python
+    install_dependencies
+    install_python_packages
+    cleanup
+}
+
+main
